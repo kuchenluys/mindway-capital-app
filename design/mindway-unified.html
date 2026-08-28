@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mindway Capital - Plataforma Integral de Crecimiento</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1a1f35 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+
+        /* === AUTHENTICATION SCREEN === */
+        #auth-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #0f172a 0%, #1a1f35 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .auth-card {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            border-radius: 16px;
+            padding: 48px;
+            max-width: 420px;
+            width: 100%;
+            backdrop-filter: blur(20px);
+        }
+
+        .auth-logo {
+            font-size: 32px;
+            font-weight: 800;
+            color: #fbbf24;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .auth-subtitle {
+            color: #94a3b8;
+            text-align: center;
+            margin-bottom: 32px;
+            font-size: 14px;
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .auth-tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: rgba(99, 102, 241, 0.05);
+            color: #94a3b8;
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .auth-tab-btn.active {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #000;
+            border-color: #fbbf24;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            color: #cbd5e1;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 8px;
+            color: #f1f5f9;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #fbbf24;
+            background: rgba(251, 191, 36, 0.05);
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 24px;
+            transition: all 0.3s;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(251, 191, 36, 0.3);
+        }
+
+        .role-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .role-card {
+            padding: 16px;
+            background: rgba(99, 102, 241, 0.05);
+            border: 2px solid rgba(99, 102, 241, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .role-card:hover,
+        .role-card.selected {
+            border-color: #fbbf24;
+            background: rgba(251, 191, 36, 0.1);
+        }
+
+        .role-card-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .role-card-name {
+            color: #f1f5f9;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        /* === MAIN APP === */
+        #app {
+            display: none;
+        }
+
+        .navbar {
+            background: rgba(15, 23, 42, 0.8);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fbbf24;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-tab-btn {
+            padding: 8px 14px;
+            background: transparent;
+            color: #94a3b8;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .nav-tab-btn:hover,
+        .nav-tab-btn.active {
+            color: #fbbf24;
+            background: rgba(251, 191, 36, 0.1);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 6px;
+            font-size: 12px;
+            color: #cbd5e1;
+        }
+
+        .logout-btn {
+            padding: 8px 14px;
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: #f1f5f9;
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-bottom: 32px;
+        }
+
+        .hero-banner {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(79, 70, 229, 0.15));
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-size: 24px;
+            color: #f1f5f9;
+            margin-bottom: 12px;
+        }
+
+        .hero-text p {
+            color: #cbd5e1;
+            margin-bottom: 16px;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #000;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(251, 191, 36, 0.3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: #fbbf24;
+            margin-bottom: 4px;
+        }
+
+        .stat-unit {
+            font-size: 12px;
+            color: #cbd5e1;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, rgba(30, 58, 138, 0.2), rgba(79, 70, 229, 0.1));
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 16px;
+        }
+
+        .card-subtitle {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-bottom: 16px;
+        }
+
+        .progress-item {
+            margin-bottom: 16px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(148, 163, 184, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #06b6d4);
+            transition: width 0.3s ease;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 6px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .checklist-item:hover {
+            background: rgba(15, 23, 42, 0.8);
+        }
+
+        .checklist-item.completed {
+            opacity: 0.6;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(99, 102, 241, 0.3);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 12px;
+        }
+
+        .checkbox.checked {
+            background: linear-gradient(135deg, #10b981, #06b6d4);
+            border-color: #10b981;
+            color: white;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            padding-bottom: 12px;
+        }
+
+        .tab-btn {
+            padding: 10px 16px;
+            background: transparent;
+            color: #cbd5e1;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 13px;
+        }
+
+        .tab-btn.active {
+            color: #fbbf24;
+            border-bottom-color: #fbbf24;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .admin-banner {
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 32px;
+            color: #fca5a5;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1001;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            padding: 32px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 12px;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 6px;
+            color: #f1f5f9;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+        }
+
+        .tier-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .tier-card {
+            border-left: 4px solid #94a3b8;
+            padding: 24px;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(99, 102, 241, 0.1);
+        }
+
+        .tier-card.premium {
+            border-left-color: #fbbf24;
+            background: rgba(251, 191, 36, 0.05);
+            border-color: rgba(251, 191, 36, 0.2);
+        }
+
+        .tier-card.elite {
+            border-left-color: #8b5cf6;
+        }
+
+        .tier-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .tier-price {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .tier-desc {
+            font-size: 13px;
+            color: #cbd5e1;
+            margin-bottom: 20px;
+        }
+
+        .tier-features {
+            list-style: none;
+            font-size: 13px;
+            color: #cbd5e1;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid, .tier-cards {
+                grid-template-columns: 1fr;
+            }
+            .nav-tabs {
+                display: none;
+            }
+            .section-title {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- AUTH SCREEN -->
+    <div id="auth-screen">
+        <div class="auth-card">
+            <div class="auth-logo">💎 Mindway Capital</div>
+            <div class="auth-subtitle">Crece en Conciencia y Capital</div>
+
+            <div class="auth-tabs">
+                <button class="auth-tab-btn active" onclick="switchAuthTab('login')">Entrar</button>
+                <button class="auth-tab-btn" onclick="switchAuthTab('signup')">Registrarse</button>
+            </div>
+
+            <!-- LOGIN -->
+            <div id="login-tab">
+                <div class="role-selector">
+                    <div class="role-card selected" onclick="selectRole(this, 'user')">
+                        <div class="role-card-icon">👤</div>
+                        <div class="role-card-name">Usuario</div>
+                    </div>
+                    <div class="role-card" onclick="selectRole(this, 'admin')">
+                        <div class="role-card-icon">⚙️</div>
+                        <div class="role-card-name">Administrador</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" id="login-email" class="form-input" value="demo@mindway.com">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Contraseña</label>
+                    <input type="password" id="login-password" class="form-input" value="demo123">
+                </div>
+
+                <button class="auth-btn" onclick="handleLogin()">Entrar</button>
+            </div>
+
+            <!-- SIGNUP -->
+            <div id="signup-tab" style="display:none;">
+                <div class="form-group">
+                    <label class="form-label">Nombre Completo</label>
+                    <input type="text" id="signup-name" class="form-input" placeholder="Luis Kuchen">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" id="signup-email" class="form-input" placeholder="tu@email.com">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Contraseña</label>
+                    <input type="password" id="signup-password" class="form-input" placeholder="••••••••">
+                </div>
+
+                <button class="auth-btn" onclick="handleSignup()">Crear Cuenta</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP -->
+    <div id="app">
+        <!-- NAVBAR -->
+        <div class="navbar">
+            <div class="nav-content">
+                <div class="nav-left">
+                    <div class="logo" onclick="switchSection('dashboard')">💎 Mindway</div>
+                    <div class="nav-tabs">
+                        <button class="nav-tab-btn active" onclick="switchSection('dashboard')">📊 Dashboard</button>
+                        <button class="nav-tab-btn" onclick="switchSection('inversiones')">💰 Inversiones</button>
+                        <button class="nav-tab-btn" onclick="switchSection('personal')">🧠 Desarrollo</button>
+                        <button class="nav-tab-btn" onclick="switchSection('biohacking')">💪 Biohacking</button>
+                        <button class="nav-tab-btn" onclick="switchSection('cursos')">📚 Cursos</button>
+                        <button class="nav-tab-btn" onclick="switchSection('planes')">💎 Planes</button>
+                        <button class="nav-tab-btn" onclick="switchSection('comunidad')">🌱 Comunidad</button>
+                    </div>
+                </div>
+                <div class="nav-right">
+                    <div class="user-badge">
+                        <span id="user-role-badge">👤 Usuario</span>
+                        <span id="user-name-badge">Luis</span>
+                    </div>
+                    <button class="logout-btn" onclick="handleLogout()">Salir</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTAINER -->
+        <div class="container">
+
+            <!-- DASHBOARD -->
+            <div id="dashboard" class="section active">
+                <h1 class="section-title">Bienvenido a Mindway Capital 🎯</h1>
+                <p class="section-subtitle">Tu plataforma integral para crecer en conciencia y capital</p>
+
+                <div id="admin-banner" class="admin-banner" style="display:none;">
+                    ⚙️ Estás en modo <strong>ADMINISTRADOR</strong>. Puedes crear y editar contenido de todas las secciones.
+                </div>
+
+                <div class="hero-banner">
+                    <div class="hero-text">
+                        <h1>Crece en Conciencia y Capital</h1>
+                        <p>Integra tus inversiones, desarrollo personal, biohacking, educación y comunidad en una sola plataforma.</p>
+                        <span class="hero-cta" onclick="switchSection('planes')">Conocer Planes →</span>
+                    </div>
+                    <div style="font-size: 64px;">🚀</div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Mi Portfolio</div>
+                        <div class="stat-value">$12,450</div>
+                        <div class="stat-unit">en activos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Progreso Este Mes</div>
+                        <div class="stat-value">87%</div>
+                        <div class="stat-unit">completado</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Racha Actual</div>
+                        <div class="stat-value">15</div>
+                        <div class="stat-unit">días activo</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Comunidad</div>
+                        <div class="stat-value">1.2K</div>
+                        <div class="stat-unit">miembros</div>
+                    </div>
+                </div>
+
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-title">📈 Mis Posiciones</div>
+                        <div class="checklist-item">
+                            <div class="checkbox checked">✓</div>
+                            <div>
+                                <div style="color:#f1f5f9;font-weight:600;">XAUUSD - Short</div>
+                                <div style="font-size:12px;color:#94a3b8;">Patrón Sniper activo</div>
+                            </div>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="checkbox">▢</div>
+                            <div>
+                                <div style="color:#f1f5f9;font-weight:600;">EURUSD - Long</div>
+                                <div style="font-size:12px;color:#94a3b8;">Pendiente entrada</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">🎯 Objetivos Hoy</div>
+                        <div class="checklist-item">
+                            <div class="checkbox checked">✓</div>
+                            <div>Meditar 20 min</div>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="checkbox checked">✓</div>
+                            <div>Leer 30 min</div>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="checkbox">▢</div>
+                            <div>Hacer ejercicio</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">📚 En Progreso</div>
+                        <div class="card-subtitle">Trading Avanzado</div>
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span>Módulo 2 de 5</span>
+                                <span>40%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 40%"></div>
+                            </div>
+                        </div>
+                        <div class="card-subtitle" style="margin-top:16px;">Mindfulness Avanzado</div>
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span>Semana 3 de 8</span>
+                                <span>37%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 37%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INVERSIONES -->
+            <div id="inversiones" class="section">
+                <h1 class="section-title">💰 Gestión de Inversiones</h1>
+                <p class="section-subtitle">Monitorea tus posiciones y estrategias de trading</p>
+
+                <div id="admin-inversiones" style="display:none;margin-bottom:24px;">
+                    <button onclick="openModal('trade-modal')" style="background: linear-gradient(135deg, #10b981, #06b6d4); color: white;">+ Nueva Posición</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">📊 Mi Portfolio</div>
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="switchTab(this, 'inv-activas')">Activas</button>
+                        <button class="tab-btn" onclick="switchTab(this, 'inv-cerradas')">Cerradas</button>
+                    </div>
+
+                    <div id="inv-activas" class="tab-content active">
+                        <div class="checklist-item">
+                            <div style="flex:1;">
+                                <div style="color:#f1f5f9;font-weight:600;">XAUUSD - SHORT</div>
+                                <div style="font-size:12px;color:#94a3b8;">Entrada: 2450 | SL: 2460 | TP: 2440</div>
+                            </div>
+                            <div style="text-align:right;color:#10b981;font-weight:600;">+180 pips</div>
+                        </div>
+                    </div>
+
+                    <div id="inv-cerradas" class="tab-content" style="display:none;">
+                        <div class="checklist-item" style="opacity:0.6;">
+                            <div style="flex:1;">
+                                <div style="color:#f1f5f9;font-weight:600;">EURUSD - LONG</div>
+                                <div style="font-size:12px;color:#94a3b8;">Entrada: 1.0850 | Salida: 1.0920</div>
+                            </div>
+                            <div style="text-align:right;color:#10b981;font-weight:600;">+700 pips</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DESARROLLO PERSONAL -->
+            <div id="personal" class="section">
+                <h1 class="section-title">🧠 Desarrollo Personal</h1>
+                <p class="section-subtitle">Trackea tu evolución en todos los aspectos</p>
+
+                <div id="admin-personal" style="display:none;margin-bottom:24px;">
+                    <button onclick="openModal('post-modal')" style="background: linear-gradient(135deg, #8b5cf6, #ec4899); color: white;">+ Nuevo Contenido</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">📖 Pilares de Desarrollo</div>
+                    <div class="progress-item">
+                        <div class="progress-label">
+                            <span>Mindfulness</span>
+                            <span>78%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 78%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-label">
+                            <span>Productividad</span>
+                            <span>65%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 65%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-label">
+                            <span>Relaciones</span>
+                            <span>82%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 82%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BIOHACKING -->
+            <div id="biohacking" class="section">
+                <h1 class="section-title">💪 Biohacking - Optimización del Cuerpo</h1>
+                <p class="section-subtitle">Llevar tu cuerpo al nivel que requiere la vida que estás construyendo</p>
+
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchBioTab(this, 'bio-daily')">Actividades Diarias</button>
+                    <button class="tab-btn" onclick="switchBioTab(this, 'bio-metrics')">Métricas</button>
+                    <button class="tab-btn" onclick="switchBioTab(this, 'bio-nutrition')">Nutrición</button>
+                    <button class="tab-btn" onclick="switchBioTab(this, 'bio-sleep')">Sueño</button>
+                    <button class="tab-btn" onclick="switchBioTab(this, 'bio-learning')">Aprendizaje</button>
+                </div>
+
+                <div id="bio-daily" class="tab-content active">
+                    <div id="admin-biohacking" style="display:none;margin-bottom:24px;">
+                        <button onclick="openModal('biohack-modal')" style="background: linear-gradient(135deg, #ec4899, #f472b6); color: white;">+ Actividad Personal</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Checklist de Hoy</div>
+                        <div class="checklist-item" onclick="toggleCheckbox(this)">
+                            <div class="checkbox checked">✓</div>
+                            <div><strong>Meditación</strong> - 20 minutos</div>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheckbox(this)">
+                            <div class="checkbox checked">✓</div>
+                            <div><strong>Ejercicio</strong> - Fuerza</div>
+                        </div>
+                        <div class="checklist-item" onclick="toggleCheckbox(this)">
+                            <div class="checkbox">▢</div>
+                            <div><strong>Lectura</strong> - 30 minutos</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="bio-metrics" class="tab-content" style="display:none;">
+                    <div class="card">
+                        <div class="card-title">Métricas de Hoy</div>
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span>Peso</span>
+                                <span>75.2 kg</span>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span>Horas de Sueño</span>
+                                <span>7.5 h</span>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span>Tiempo al Sol</span>
+                                <span>45 min</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="bio-nutrition" class="tab-content" style="display:none;">
+                    <div class="card">
+                        <div class="card-title">Nutrición Hoy</div>
+                        <div class="checklist-item">
+                            <div class="checkbox checked">✓</div>
+                            <div>Desayuno - Proteína + Grasas</div>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="checkbox checked">✓</div>
+                            <div>Almuerzo - Balanceado</div>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="checkbox">▢</div>
+                            <div>Cena - Ligera</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="bio-sleep" class="tab-content" style="display:none;">
+                    <div class="card">
+                        <div class="card-title">Calidad de Sueño</div>
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span>Consistencia (7+ hrs)</span>
+                                <span>5/7</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 71%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="bio-learning" class="tab-content" style="display:none;">
+                    <div class="card">
+                        <div class="card-title">Aprendizaje &amp; Podcasts</div>
+                        <div class="checklist-item">
+                            <div class="checkbox checked">✓</div>
+                            <div><strong>Inversión</strong> - Podcast sobre mercados</div>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="checkbox">▢</div>
+                            <div><strong>Espiritualidad</strong> - Meditación guiada</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CURSOS -->
+            <div id="cursos" class="section">
+                <h1 class="section-title">📚 Educación &amp; Cursos</h1>
+                <p class="section-subtitle">Accede a nuestro catálogo exclusivo de metodologías y talleres</p>
+
+                <div id="admin-cursos" style="display:none;margin-bottom:24px;">
+                    <button onclick="openModal('course-modal')" style="background: linear-gradient(135deg, #06b6d4, #0891b2); color: white;">+ Nuevo Curso</button>
+                </div>
+
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-title">Trading Avanzado</div>
+                        <div class="card-subtitle">Domina las estrategias del mercado</div>
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span>Módulo 2 de 5</span>
+                                <span>40%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 40%"></div>
+                            </div>
+                        </div>
+                        <button style="width:100%;margin-top:12px;">Continuar</button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">Mindfulness Avanzado</div>
+                        <div class="card-subtitle">Meditación para traders</div>
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span>Semana 3 de 8</span>
+                                <span>37%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 37%"></div>
+                            </div>
+                        </div>
+                        <button style="width:100%;margin-top:12px;">Continuar</button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">Biohacking 101</div>
+                        <div class="card-subtitle">Optimiza tu cuerpo</div>
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span>Disponible</span>
+                                <span>0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <button style="width:100%;margin-top:12px;">Empezar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PLANES -->
+            <div id="planes" class="section">
+                <h1 class="section-title">💎 Elige Tu Plan</h1>
+                <p class="section-subtitle">Acceso a funcionalidades según tus necesidades</p>
+
+                <div class="tier-cards">
+                    <div class="tier-card">
+                        <div style="color:#94a3b8;" class="tier-label">📦 Gratis</div>
+                        <div class="tier-price">$0</div>
+                        <div class="tier-desc">Perfecto para comenzar</div>
+                        <ul class="tier-features">
+                            <li>✓ Dashboard básico</li>
+                            <li>✓ 1 posición abierta</li>
+                            <li>✓ Acceso a comunidad</li>
+                            <li>✗ Cursos premium</li>
+                            <li>✗ Biohacking avanzado</li>
+                        </ul>
+                        <button style="width:100%;margin-top:16px;background:rgba(99,102,241,0.1);color:#cbd5e1;">Ver Detalles</button>
+                    </div>
+
+                    <div class="tier-card premium">
+                        <div style="color:#fbbf24;" class="tier-label">💎 Premium</div>
+                        <div class="tier-price" style="color:#fbbf24;">$29<span style="font-size:16px;color:#94a3b8;">/mes</span></div>
+                        <div class="tier-desc">Lo más popular</div>
+                        <ul class="tier-features">
+                            <li>✓ Dashboard completo</li>
+                            <li>✓ Posiciones ilimitadas</li>
+                            <li>✓ Todos los cursos</li>
+                            <li>✓ Biohacking completo</li>
+                            <li>✓ Mentoría mensual</li>
+                        </ul>
+                        <button style="width:100%;margin-top:16px;">✓ Plan Activo</button>
+                    </div>
+
+                    <div class="tier-card">
+                        <div style="color:#8b5cf6;" class="tier-label">👑 Elite</div>
+                        <div class="tier-price" style="color:#8b5cf6;">$99<span style="font-size:16px;color:#94a3b8;">/mes</span></div>
+                        <div class="tier-desc">Para traders serios</div>
+                        <ul class="tier-features">
+                            <li>✓ Todo de Premium</li>
+                            <li>✓ Mentoría 1-on-1</li>
+                            <li>✓ Análisis exclusivo</li>
+                            <li>✓ API privada</li>
+                            <li>✓ Soporte prioritario</li>
+                        </ul>
+                        <button style="width:100%;margin-top:16px;background:rgba(139,92,246,0.1);color:#8b5cf6;">Upgrade</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMUNIDAD -->
+            <div id="comunidad" class="section">
+                <h1 class="section-title">🌱 Comunidad</h1>
+                <p class="section-subtitle">Conecta con otros traders y emprendedores</p>
+
+                <div id="admin-comunidad" style="display:none;margin-bottom:24px;">
+                    <button onclick="openModal('community-modal')" style="background: linear-gradient(135deg, #10b981, #059669); color: white;">+ Nuevo Post</button>
+                </div>
+
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-title">👤 María García</div>
+                        <div class="card-subtitle">Trader desde 6 meses</div>
+                        <p style="color:#cbd5e1;margin-bottom:12px;">"Mindway cambió mi forma de operar. Los cursos + biohacking = máximo rendimiento 🔥"</p>
+                        <div style="color:#fbbf24;font-size:12px;">⭐⭐⭐⭐⭐</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">👤 Carlos Rodríguez</div>
+                        <div class="card-subtitle">ROI +150% en 2024</div>
+                        <p style="color:#cbd5e1;margin-bottom:12px;">"La comunidad y mentoría en vivo son increíbles. Me inspiraron a crecer 🚀"</p>
+                        <div style="color:#fbbf24;font-size:12px;">⭐⭐⭐⭐⭐</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">👤 Ana Jiménez</div>
+                        <div class="card-subtitle">Emprendedora</div>
+                        <p style="color:#cbd5e1;margin-bottom:12px;">"Mindway es la única plataforma que integra inversiones + bienestar. Perfecto 💪"</p>
+                        <div style="color:#fbbf24;font-size:12px;">⭐⭐⭐⭐⭐</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODALS -->
+    <div id="trade-modal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('trade-modal')">×</button>
+            <h2 style="margin-bottom:20px;">Crear Nueva Posición</h2>
+            <div class="form-group">
+                <label class="form-label">Par de Divisas</label>
+                <select><option>XAUUSD</option><option>EURUSD</option></select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Tipo</label>
+                <select><option>LONG</option><option>SHORT</option></select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Entrada</label>
+                <input type="number" placeholder="2450.00">
+            </div>
+            <button onclick="closeModal('trade-modal')" style="width:100%;">Guardar Posición</button>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let userRole = 'user';
+
+        function selectRole(element, role) {
+            document.querySelectorAll('.role-card').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+            userRole = role;
+        }
+
+        function switchAuthTab(tab) {
+            document.getElementById('login-tab').style.display = tab === 'login' ? 'block' : 'none';
+            document.getElementById('signup-tab').style.display = tab === 'signup' ? 'block' : 'none';
+            document.querySelectorAll('.auth-tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function handleLogin() {
+            const email = document.getElementById('login-email').value;
+            const name = email.split('@')[0];
+            currentUser = { name, email, role: userRole };
+
+            // Hide auth, show app
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
+
+            // Update UI
+            document.getElementById('user-role-badge').textContent = userRole === 'admin' ? '⚙️ Admin' : '👤 Usuario';
+            document.getElementById('user-name-badge').textContent = name.charAt(0).toUpperCase() + name.slice(1);
+
+            // Show/hide admin sections
+            const adminSections = document.querySelectorAll('[id^="admin-"]');
+            adminSections.forEach(el => el.style.display = userRole === 'admin' ? 'block' : 'none');
+
+            if (userRole === 'admin') {
+                document.getElementById('admin-banner').style.display = 'block';
+            }
+        }
+
+        function handleSignup() {
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            if (name && email) {
+                currentUser = { name, email, role: userRole };
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+
+                document.getElementById('user-role-badge').textContent = userRole === 'admin' ? '⚙️ Admin' : '👤 Usuario';
+                document.getElementById('user-name-badge').textContent = name;
+
+                const adminSections = document.querySelectorAll('[id^="admin-"]');
+                adminSections.forEach(el => el.style.display = userRole === 'admin' ? 'block' : 'none');
+
+                if (userRole === 'admin') {
+                    document.getElementById('admin-banner').style.display = 'block';
+                }
+            }
+        }
+
+        function handleLogout() {
+            currentUser = null;
+            document.getElementById('auth-screen').style.display = 'flex';
+            document.getElementById('app').style.display = 'none';
+        }
+
+        function switchSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`[onclick="switchSection('${sectionId}')"]`).classList.add('active');
+        }
+
+        function switchBioTab(btn, tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => {
+                if (t.id && t.id.startsWith('bio-')) t.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        function switchTab(btn, tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => {
+                if (t.id === tabId || (t.id && t.id.startsWith(tabId.split('-')[0]))) {
+                    t.classList.remove('active');
+                }
+            });
+            document.getElementById(tabId).classList.add('active');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        function toggleCheckbox(element) {
+            const checkbox = element.querySelector('.checkbox');
+            checkbox.classList.toggle('checked');
+            checkbox.textContent = checkbox.classList.contains('checked') ? '✓' : '▢';
+            element.classList.toggle('completed');
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Initialize
+        document.querySelectorAll('[id^="admin-"]').forEach(el => el.style.display = 'none');
+    </script>
+</body>
+</html>
